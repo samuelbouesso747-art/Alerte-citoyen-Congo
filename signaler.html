@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alerte Citoyenne - Signaler</title>
     <style>
-        /* Le style est repris de la page d'accueil pour la cohérence */
+        /* CSS GÉNÉRAL */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -19,6 +19,42 @@
             background-position: center;
             background-attachment: fixed;
         }
+        
+        /* CSS DE LA BARRE DE NAVIGATION (identique) */
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px; 
+        }
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .site-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        .navbar-links a:hover {
+            background-color: #555;
+        }
+        
+        /* CSS DU FORMULAIRE */
         .container {
             width: 90%;
             max-width: 450px;
@@ -28,7 +64,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         h1 {
-            color: #e74c3c; /* Rouge pour le titre d'alerte */
+            color: #e74c3c;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -44,7 +80,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-sizing: border-box; /* Pour que le padding soit inclus dans la largeur */
+            box-sizing: border-box;
             font-size: 1em;
         }
         textarea {
@@ -52,7 +88,7 @@
             min-height: 100px;
         }
         #btn-soumettre {
-            background-color: #27ae60; /* Vert pour la soumission */
+            background-color: #27ae60;
             color: white;
             padding: 15px;
             border: none;
@@ -70,6 +106,17 @@
 </head>
 <body>
 
+<div class="navbar">
+    <div class="navbar-content">
+        <a href="index.html" class="site-title">Alerte Citoyenne</a>
+        <div class="navbar-links">
+            <a href="index.html">Accueil</a>
+            <a href="signaler.html">Signaler</a>
+            <a href="consulter.html">Alertes</a>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <h1>🚨 Signaler un Incident</h1>
     <p>Signalez un événement pour alerter la communauté. Votre signalement reste **anonyme**.</p>
@@ -86,13 +133,22 @@
         </select>
         
         <label for="localisation">Localisation (Rue ou Quartier) :</label>
-        <input type="text" id="localisation" name="localisation" placeholder="Ex: Marché Total, Rue 12" required>
+        <input type="text" id="localisation" name="localisation" 
+               placeholder="Ex: Marché Total, Rue 12" required list="suggestions">
         
+        <datalist id="suggestions">
+            <option value="Marché Total">
+            <option value="Avenue de l'Indépendance">
+            <option value="Rond-point de la Patte d'Oie">
+            <option value="Aéroport Maya-Maya">
+            <option value="Plage de Pointe-Noire">
+        </datalist>
+
         <label for="date_heure">Date et Heure Estimée :</label>
         <input type="datetime-local" id="date_heure" name="date_heure" required>
 
         <label for="description">Description de l'événement :</label>
-        <textarea id="description" name="description" placeholder="Décrivez brièvement ce qui s'est passé, SANS nommer de personnes. (Ex: Un sac a été arraché près de l'arrêt de bus il y a 10 minutes.)" required></textarea>
+        <textarea id="description" name="description" placeholder="Décrivez brièvement ce qui s'est passé, SANS nommer de personnes." required></textarea>
         
         <button type="submit" id="btn-soumettre">Envoyer l'Alerte</button>
     </form>
@@ -100,18 +156,12 @@
 
 <script>
     document.getElementById('incidentForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Empêche l'envoi réel du formulaire pour la démo
+        event.preventDefault(); 
+        
+        // Simulation de l'envoi
+        alert("Alerte envoyée avec succès ! Merci de votre contribution anonyme.");
 
-        // Récupération des données du formulaire (juste pour la démo)
-        const type = document.getElementById('type_incident').value;
-        const localisation = document.getElementById('localisation').value;
-        const date = document.getElementById('date_heure').value;
-        const description = document.getElementById('description').value;
-
-        // Affichage de confirmation et simulation de l'envoi
-        alert(`Alerte envoyée avec succès ! (Simulation)\n\nType: ${type}\nLocalisation: ${localisation}\nDescription: ${description}`);
-
-        // Redirection vers l'accueil après l'envoi simulé
+        // Redirection vers l'accueil
         window.location.href = "index.html"; 
     });
 </script>
