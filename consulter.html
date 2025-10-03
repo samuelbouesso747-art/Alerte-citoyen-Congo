@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerte Citoyenne - Consultation</title>
+    <style>
+        /* CSS GÉNÉRAL */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('fond_securite.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        /* CSS DE LA BARRE DE NAVIGATION (identique à index.html) */
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+        }
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .site-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        .navbar-links a:hover {
+            background-color: #555;
+        }
+        
+        /* CSS DU CONTENU PRINCIPAL */
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .alert-item {
+            border: 1px solid #ddd;
+            border-left: 5px solid #3498db; 
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+        .alert-item.danger {
+            border-left: 5px solid #e74c3c;
+        }
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .alert-type {
+            font-size: 1.1em;
+        }
+        .alert-location {
+            color: #555;
+            font-size: 0.9em;
+        }
+        .alert-description {
+            margin-top: 10px;
+            font-style: italic;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="navbar-content">
+        <a href="index.html" class="site-title">Alerte Citoyenne</a>
+        <div class="navbar-links">
+            <a href="index.html">Accueil</a>
+            <a href="signaler.html">Signaler</a>
+            <a href="consulter.html">Alertes</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>🌍 Alertes Récentes</h1>
+    <p>Visualisez les incidents signalés récemment par la communauté.</p>
+    
+    <div class="alert-item danger">
+        <div class="alert-header">
+            <span class="alert-type">Vol ou Agression (Signalé il y a 30 min)</span>
+        </div>
+        <div class="alert-location">Localisation : Avenue du Général de Gaulle, près de la Banque</div>
+        <div class="alert-description">Description : Tentative d'arrachage de sac à main. Faites attention en marchant seul le soir dans cette zone.</div>
+    </div>
+    
+    <div class="alert-item">
+        <div class="alert-header">
+            <span class="alert-type">Danger Public (Signalé il y a 2h)</span>
+        </div>
+        <div class="alert-location">Localisation : Route Nationale 1, après le pont</div>
+        <div class="alert-description">Description : Gros nid-de-poule non signalé, dangereux pour les véhicules. Conduisez lentement.</div>
+    </div>
+
+    <div class="alert-item danger">
+        <div class="alert-header">
+            <span class="alert-type">Accident de la route (Signalé il y a 5h)</span>
+        </div>
+        <div class="alert-location">Localisation : Rond-point de la Patte d'Oie</div>
+        <div class="alert-description">Description : Collision légère entre deux taxis. Circulation ralentie.</div>
+    </div>
+</div>
+
+</body>
+</html>
