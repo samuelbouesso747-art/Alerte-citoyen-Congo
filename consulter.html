@@ -20,7 +20,7 @@
             background-attachment: fixed;
         }
         
-        /* CSS DE LA BARRE DE NAVIGATION (identique à index.html) */
+        /* CSS DE LA BARRE DE NAVIGATION (identique) */
         .navbar {
             width: 100%;
             background-color: #333;
@@ -52,6 +52,15 @@
         }
         .navbar-links a:hover {
             background-color: #555;
+        }
+
+        /* CSS DE LA CARTE */
+        #map {
+            height: 300px; /* Hauteur de la carte */
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         /* CSS DU CONTENU PRINCIPAL */
@@ -113,33 +122,69 @@
 </div>
 
 <div class="container">
-    <h1>🌍 Alertes Récentes</h1>
-    <p>Visualisez les incidents signalés récemment par la communauté.</p>
+    <h1>🌍 Carte des Alertes Récentes</h1>
+
+    <div id="map"></div>
+
+    <p>Visualisez les incidents signalés récemment par la communauté :</p>
     
     <div class="alert-item danger">
         <div class="alert-header">
             <span class="alert-type">Vol ou Agression (Signalé il y a 30 min)</span>
         </div>
-        <div class="alert-location">Localisation : Avenue du Général de Gaulle, près de la Banque</div>
-        <div class="alert-description">Description : Tentative d'arrachage de sac à main. Faites attention en marchant seul le soir dans cette zone.</div>
+        <div class="alert-location">Localisation : Avenue du Général de Gaulle, Brazzaville</div>
+        <div class="alert-description">Description : Tentative d'arrachage de sac à main.</div>
     </div>
     
     <div class="alert-item">
         <div class="alert-header">
             <span class="alert-type">Danger Public (Signalé il y a 2h)</span>
         </div>
-        <div class="alert-location">Localisation : Route Nationale 1, après le pont</div>
-        <div class="alert-description">Description : Gros nid-de-poule non signalé, dangereux pour les véhicules. Conduisez lentement.</div>
-    </div>
-
-    <div class="alert-item danger">
-        <div class="alert-header">
-            <span class="alert-type">Accident de la route (Signalé il y a 5h)</span>
-        </div>
-        <div class="alert-location">Localisation : Rond-point de la Patte d'Oie</div>
-        <div class="alert-description">Description : Collision légère entre deux taxis. Circulation ralentie.</div>
+        <div class="alert-location">Localisation : Route Nationale 1, Pointe-Noire</div>
+        <div class="alert-description">Description : Gros nid-de-poule non signalé.</div>
     </div>
 </div>
+
+<script>
+    function initMap() {
+        // Coordonnées du Congo (Zone centrale entre Brazzaville et Pointe-Noire)
+        const congoCenter = { lat: -3.8, lng: 15.2 }; 
+        
+        // Initialisation de la carte
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 6, // Zoom faible pour voir tout le pays
+            center: congoCenter,
+        });
+
+        // Simuler les emplacements des alertes avec des marqueurs
+        const alertLocations = [
+            { 
+                lat: -4.26, lng: 15.28, // Brazzaville (Vol ou Agression)
+                title: "Vol ou Agression (Brazzaville)"
+            },
+            { 
+                lat: -4.78, lng: 11.87, // Pointe-Noire (Danger Public)
+                title: "Danger Public (Pointe-Noire)"
+            }
+        ];
+
+        alertLocations.forEach(alert => {
+            new google.maps.Marker({
+                position: { lat: alert.lat, lng: alert.lng },
+                map,
+                title: alert.title,
+            });
+        });
+    }
+
+    // Le script de la carte Google Maps DOIT être chargé pour que cela fonctionne.
+    // L'URL ci-dessous contient une clé API fictive ('YOUR_API_KEY').
+    // Pour que la carte fonctionne réellement, vous devriez obtenir une vraie clé API chez Google.
+    // Pour la démo, nous laissons le code en place.
+</script>
+
+<script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>
 
 </body>
 </html>
