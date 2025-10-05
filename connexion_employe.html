@@ -9,7 +9,7 @@
         /* BASE & GÉNÉRAL */
         /* ======================================= */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif; /* Police moderne */
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,22 +17,19 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-color: #ecf0f1;
-            background-image: url('fond_securite.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Fond dégradé clair et doux */
+            color: #333;
         }
 
         /* ======================================= */
-        /* NAVIGATION */
+        /* NAVIGATION BAR (Design Aplatit) */
         /* ======================================= */
         .navbar {
             width: 100%;
-            background-color: #2c3e50;
-            color: white;
+            background-color: #ffffff; /* Fond blanc net */
+            border-bottom: 1px solid #e0e0e0;
             padding: 15px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre légère */
             position: fixed; 
             top: 0;
             z-index: 1000;
@@ -47,20 +44,21 @@
         }
         .site-title {
             font-size: 1.6em;
-            font-weight: bold;
-            color: #3498db;
+            font-weight: 700;
+            color: #1a73e8; /* Bleu vif */
             text-decoration: none;
         }
         .navbar-links a {
-            color: white;
+            color: #555;
             text-decoration: none;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 4px;
             margin-left: 10px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
         .navbar-links a:hover {
-            background-color: #34495e;
+            background-color: #e6e6e6;
+            color: #1a73e8;
         }
 
         /* ======================================= */
@@ -68,57 +66,79 @@
         /* ======================================= */
         .login-container {
             width: 90%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            max-width: 420px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: 100px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .login-container:hover {
+            transform: translateY(-2px);
         }
         h2 {
-            color: #2c3e50;
+            color: #1a73e8;
             text-align: center;
-            margin-bottom: 30px;
+            font-size: 1.8em;
+            margin-bottom: 35px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
         }
         label {
             display: block;
             margin-top: 15px;
             margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95em;
         }
-        input[type="text"], input[type="date"], select {
+        input[type="text"], input[type="date"], input[type="password"], select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
+        input:focus, select:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+            outline: none;
+        }
+        
+        /* CHAMPS SPÉCIFIQUES */
+        #matricule {
+            text-transform: uppercase; /* Affichage en majuscule */
+        }
+        
         #password-field-container {
             margin-top: 15px;
-            display: none; /* Champ mot de passe caché par défaut */
+            display: none; 
         }
         #btn-connexion {
-            background-color: #3498db;
+            background-color: #1a73e8;
             color: white;
             padding: 15px;
             border: none;
             border-radius: 8px;
             font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            margin-top: 25px;
-            transition: background-color 0.3s;
+            margin-top: 30px;
+            transition: background-color 0.3s, transform 0.1s;
         }
         #btn-connexion:hover {
-            background-color: #2980b9;
+            background-color: #0c62c9;
+            transform: translateY(-1px);
         }
         .warning-message {
             color: #e74c3c;
-            font-size: 0.9em;
-            margin-top: 10px;
-            text-align: center;
+            font-size: 0.85em;
+            margin-top: 5px;
+            text-align: left;
         }
     </style>
 </head>
@@ -135,8 +155,7 @@
 
 <div class="login-container">
     <h2>Connexion Employé</h2>
-    <p style="text-align: center; color: #7f8c8d;">Veuillez vous identifier pour accéder au formulaire de signalement.</p>
-
+    
     <form id="employeeLoginForm">
         
         <label for="nom_prenom">Nom et Prénom :</label>
@@ -154,7 +173,7 @@
         </select>
 
         <label for="matricule">Matricule :</label>
-        <input type="text" id="matricule" required placeholder="Ex: DG012 ou ST05">
+        <input type="text" id="matricule" required placeholder="Ex: DG010 ou ST05">
         <div class="warning-message" id="matricule-hint">Matricule requis (DG, CE, TE, ST + 0 + nombre).</div>
         
         <div id="password-field-container">
@@ -169,13 +188,18 @@
 <script>
     // Configuration Administrateur
     const DG_PASSWORD = "Heydna17";
-    const DG_MATRICULE = "DG010"; // Le matricule unique de l'administrateur
+    const DG_MATRICULE = "DG010"; 
+
+    const matriculeInput = document.getElementById('matricule');
 
     // ----------------------------------------------------
-    // GESTION DE L'AFFICHAGE DU CHAMP MOT DE PASSE
+    // GESTION DU MATRICULE & AFFICHAGE DU MOT DE PASSE DG
     // ----------------------------------------------------
-    document.getElementById('matricule').addEventListener('input', function() {
-        const matricule = this.value.trim().toUpperCase();
+    matriculeInput.addEventListener('input', function() {
+        // Convertir en majuscule en temps réel (pour la cohérence des données)
+        this.value = this.value.toUpperCase();
+        
+        const matricule = this.value.trim();
         const passwordContainer = document.getElementById('password-field-container');
         
         // Si le matricule est DG010, afficher le champ mot de passe
@@ -183,7 +207,7 @@
             passwordContainer.style.display = 'block';
         } else {
             passwordContainer.style.display = 'none';
-            document.getElementById('dg_password').value = ''; // Vider par sécurité
+            document.getElementById('dg_password').value = ''; 
         }
     });
 
@@ -195,44 +219,6 @@
         event.preventDefault(); 
 
         const nomPrenom = document.getElementById('nom_prenom').value.trim();
-        const matricule = document.getElementById('matricule').value.trim().toUpperCase();
-        const password = document.getElementById('dg_password').value;
-
-        const standardMatriculeRegex = /^(DG|CE|TE|ST)0\d+$/;
-
-        if (!standardMatriculeRegex.test(matricule)) {
-            alert("Erreur de format de Matricule. Le matricule doit être valide (ex: CE01, DG012).");
-            return;
-        }
-
-        // --- 1. CAS ADMINISTRATEUR (DG010) ---
-        if (matricule === DG_MATRICULE) {
-            if (password === DG_PASSWORD) {
-                // Connexion DG réussie -> accès à l'interface de consultation
-                sessionStorage.setItem('dg_access', 'granted');
-                alert(`Accès Administrateur accordé à ${matricule}.`);
-                window.location.href = "consulter.html";
-                return;
-            } else {
-                alert("Mot de passe Administrateur incorrect.");
-                return;
-            }
-        }
-        
-        // --- 2. CAS EMPLOYÉ STANDARD ---
-        
-        // Si la validation passe, simuler la connexion et enregistrer les données
-        sessionStorage.setItem('employee_access', 'granted');
-        sessionStorage.setItem('employee_name', nomPrenom);
-        sessionStorage.setItem('employee_matricule', matricule);
-        sessionStorage.setItem('employee_sexe', document.getElementById('sexe').value);
-        sessionStorage.setItem('employee_dob', document.getElementById('date_naissance').value);
-
-        alert(`Connexion réussie, ${nomPrenom}. Accès au formulaire de signalement.`);
-        // Redirection vers le formulaire de signalement
-        window.location.href = "signaler.html"; 
-    });
-</script>
-
-</body>
-</html>
+        // Le matricule est déjà en majuscule grâce à l'événement 'input'
+        const matricule = matriculeInput.value.trim(); 
+        const password = document.getElementById
