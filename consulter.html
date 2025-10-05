@@ -95,7 +95,11 @@
     </style>
 </head>
 <body>
-
+// VÉRIFICATION DE SÉCURITÉ POUR L'ACCÈS AU TABLEAU DE BORD
+if (!sessionStorage.getItem('dg_access')) {
+    alert("Accès non autorisé. Seul l'Administrateur DG010 peut consulter les données.");
+    window.location.href = "connexion_employe.html";
+}
 <script>
     // Si la clé d'accès n'existe pas, on redirige pour forcer le login.
     if (sessionStorage.getItem('dg_access') !== 'granted') {
@@ -140,3 +144,4 @@
 
 </body>
 </html>
+
