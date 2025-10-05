@@ -95,6 +95,10 @@
             box-sizing: border-box;
             font-size: 1em;
         }
+        #password-field-container {
+            margin-top: 15px;
+            display: none; /* Champ mot de passe caché par défaut */
+        }
         #btn-connexion {
             background-color: #3498db;
             color: white;
@@ -116,22 +120,6 @@
             margin-top: 10px;
             text-align: center;
         }
-        /* Style pour l'accès administrateur */
-        #admin-link-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        #admin-link {
-            color: #2c3e50;
-            font-size: 0.9em;
-            cursor: pointer;
-            text-decoration: none;
-            border-bottom: 1px dotted #2c3e50;
-        }
-        #admin-link:hover {
-            color: #3498db;
-            border-bottom-color: #3498db;
-        }
     </style>
 </head>
 <body>
@@ -141,7 +129,7 @@
         <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
             <a href="connexion_employe.html">Nouveau Signalement</a>
-            </div>
+        </div>
     </div>
 </div>
 
@@ -167,31 +155,49 @@
 
         <label for="matricule">Matricule :</label>
         <input type="text" id="matricule" required placeholder="Ex: DG012 ou ST05">
-        <div class="warning-message" id="matricule-hint">Doit commencer par DG, CE, TE, ou ST, suivi d'un 0 et d'un nombre (ex: CE01).</div>
+        <div class="warning-message" id="matricule-hint">Matricule requis (DG, CE, TE, ST + 0 + nombre).</div>
         
+        <div id="password-field-container">
+            <label for="dg_password">Mot de Passe Administrateur :</label>
+            <input type="password" id="dg_password" placeholder="Mot de passe DG">
+        </div>
+
         <button type="submit" id="btn-connexion">Se Connecter</button>
     </form>
-</div>
-
-<div id="admin-link-container">
-    <a href="#" id="admin-link">Accès Administrateur (DG)</a>
 </div>
 
 <script>
     // Configuration Administrateur
     const DG_PASSWORD = "Heydna17";
-    const DG_MATRICULE = "DG010"; // Nouveau matricule requis
+    const DG_MATRICULE = "DG010"; // Le matricule unique de l'administrateur
 
     // ----------------------------------------------------
-    // LOGIQUE DE CONNEXION EMPLOYÉ (NON DG)
+    // GESTION DE L'AFFICHAGE DU CHAMP MOT DE PASSE
+    // ----------------------------------------------------
+    document.getElementById('matricule').addEventListener('input', function() {
+        const matricule = this.value.trim().toUpperCase();
+        const passwordContainer = document.getElementById('password-field-container');
+        
+        // Si le matricule est DG010, afficher le champ mot de passe
+        if (matricule === DG_MATRICULE) {
+            passwordContainer.style.display = 'block';
+        } else {
+            passwordContainer.style.display = 'none';
+            document.getElementById('dg_password').value = ''; // Vider par sécurité
+        }
+    });
+
+
+    // ----------------------------------------------------
+    // LOGIQUE DE CONNEXION (DG ou Employé)
     // ----------------------------------------------------
     document.getElementById('employeeLoginForm').addEventListener('submit', function(event) {
         event.preventDefault(); 
 
         const nomPrenom = document.getElementById('nom_prenom').value.trim();
         const matricule = document.getElementById('matricule').value.trim().toUpperCase();
+        const password = document.getElementById('dg_password').value;
 
-        // Regex de validation standard pour les employés
         const standardMatriculeRegex = /^(DG|CE|TE|ST)0\d+$/;
 
         if (!standardMatriculeRegex.test(matricule)) {
@@ -199,6 +205,22 @@
             return;
         }
 
+        // --- 1. CAS ADMINISTRATEUR (DG010) ---
+        if (matricule === DG_MATRICULE) {
+            if (password === DG_PASSWORD) {
+                // Connexion DG réussie -> accès à l'interface de consultation
+                sessionStorage.setItem('dg_access', 'granted');
+                alert(`Accès Administrateur accordé à ${matricule}.`);
+                window.location.href = "consulter.html";
+                return;
+            } else {
+                alert("Mot de passe Administrateur incorrect.");
+                return;
+            }
+        }
+        
+        // --- 2. CAS EMPLOYÉ STANDARD ---
+        
         // Si la validation passe, simuler la connexion et enregistrer les données
         sessionStorage.setItem('employee_access', 'granted');
         sessionStorage.setItem('employee_name', nomPrenom);
@@ -206,39 +228,9 @@
         sessionStorage.setItem('employee_sexe', document.getElementById('sexe').value);
         sessionStorage.setItem('employee_dob', document.getElementById('date_naissance').value);
 
-
         alert(`Connexion réussie, ${nomPrenom}. Accès au formulaire de signalement.`);
-        window.location.href = "signaler.html";
-    });
-
-    // ----------------------------------------------------
-    // LOGIQUE DE CONNEXION DG (ADMINISTRATEUR)
-    // ----------------------------------------------------
-    document.getElementById('admin-link').addEventListener('click', function(event) {
-        event.preventDefault();
-
-        // Étape 1 : Mot de passe
-        const motDePasseEntre = prompt("ACCÈS DG | Étape 1/2 : Veuillez entrer le mot de passe :");
-
-        if (motDePasseEntre !== DG_PASSWORD) {
-            if (motDePasseEntre !== null) {
-                alert("Accès refusé. Mot de passe incorrect.");
-            }
-            return;
-        }
-
-        // Étape 2 : Matricule spécifique
-        const matriculeEntre = prompt("ACCÈS DG | Étape 2/2 : Veuillez entrer votre matricule (DG010 requis) :");
-
-        if (matriculeEntre && matriculeEntre.toUpperCase() === DG_MATRICULE) {
-            sessionStorage.setItem('dg_access', 'granted');
-            alert(`Accès Administrateur accordé à ${DG_MATRICULE}.`);
-            
-            // Rediriger vers la page de consultation
-            window.location.href = "consulter.html";
-        } else {
-            alert(`Accès DG refusé. Seul le matricule ${DG_MATRICULE} est autorisé.`);
-        }
+        // Redirection vers le formulaire de signalement
+        window.location.href = "signaler.html"; 
     });
 </script>
 
