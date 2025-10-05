@@ -83,7 +83,7 @@
             font-weight: bold;
             color: #333;
         }
-        input[type="text"], input[type="datetime-local"], select, textarea {
+        input[type="text"], input[type="datetime-local"], select, textarea, input[type="hidden"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -128,24 +128,29 @@
         <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
             <a href="index.html">Accueil</a>
-            <a href="signaler.html">Nouveau Signalement</a>
+            <a href="connexion_employe.html">Nouveau Signalement</a>
             <a href="consulter.html">Tableau de Bord</a>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <h1>🔔 Signaler une Anomalie Interne</h1>
+    <h1>🔔 Formulaire de Signalement</h1>
+    <p id="welcome-message" style="text-align: center; font-weight: bold; color: #34495e;"></p>
     <p>Ce signalement est transmis directement à la Direction Générale (DG).</p>
     
     <form id="incidentForm">
         
-        <h2>Votre Identification</h2>
+        <h2>Votre Identification (Pré-remplie)</h2>
         <label for="nom_prenom">Nom et Prénom :</label>
-        <input type="text" id="nom_prenom" name="nom_prenom" placeholder="Votre Nom et Prénom" required>
+        <input type="text" id="nom_prenom" name="nom_prenom" readonly style="background-color: #f0f0f0;">
+
+        <label for="matricule_hidden">Matricule :</label>
+        <input type="text" id="matricule_hidden" name="matricule_hidden" readonly style="background-color: #f0f0f0;">
 
         <label for="poste">Poste / Fonction :</label>
         <input type="text" id="poste" name="poste" placeholder="Ex: Chef d'Équipe Logistique" required>
+
 
         <h2>Localisation de l'Anomalie</h2>
         <div class="form-row">
@@ -195,8 +200,23 @@
 </div>
 
 <script>
+    // Vérification de la session employé
+    const employeeAccess = sessionStorage.getItem('employee_access');
+    const employeeName = sessionStorage.getItem('employee_name');
+    const employeeMatricule = sessionStorage.getItem('employee_matricule');
+
+    if (!employeeAccess || !employeeName || !employeeMatricule) {
+        alert("Session expirée ou non autorisée. Veuillez vous connecter.");
+        window.location.href = "connexion_employe.html";
+    } else {
+        // Pré-remplissage des champs d'identification
+        document.getElementById('nom_prenom').value = employeeName;
+        document.getElementById('matricule_hidden').value = employeeMatricule;
+        document.getElementById('welcome-message').textContent = `Connecté en tant que: ${employeeName} (${employeeMatricule})`;
+    }
+
+
     // ⚠️ URL DE VOTRE APPLICATION WEB GOOGLE APPS SCRIPT
-    // Cette URL est correcte pour l'ENVOI de données
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6lsHAOLM4NKCal2j4IfgxOpGMG4w4ny57EDJP9X_fM2tUXdcdj0h54Rw6rg_oDW7wgQ/exec"; 
 
     document.getElementById('incidentForm').addEventListener('submit', function(event) {
@@ -216,8 +236,11 @@
             if (response.ok) {
                 // Succès : Réinitialiser le formulaire et alerter
                 form.reset();
-                alert("Signalement transmis avec succès ! La Direction Générale a été notifiée et l'anomalie est enregistrée dans la base de données.");
+                alert("Signalement transmis avec succès ! La Direction Générale a été notifiée.");
                 window.location.href = "index.html"; 
+                // Optionnel: Déconnecter l'employé après l'envoi
+                // sessionStorage.removeItem('employee_access');
+                // sessionStorage.removeItem('employee_name');
             } else {
                 // Échec de l'envoi
                 alert("Erreur lors de la transmission du signalement. Veuillez réessayer.");
