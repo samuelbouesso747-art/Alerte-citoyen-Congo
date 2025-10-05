@@ -5,143 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signalement Pro - Tableau de Bord DG</title>
     <style>
-        /* CSS GÉNÉRAL */
+        /* ======================================= */
+        /* BASE & GÉNÉRAL */
+        /* ======================================= */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background-image: url('fond_securite.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: #333;
         }
-        
-        /* CSS DE LA BARRE DE NAVIGATION (identique) */
+
+        /* ======================================= */
+        /* NAVIGATION BAR */
+        /* ======================================= */
         .navbar {
             width: 100%;
-            background-color: #2c3e50;
-            color: white;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
             padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px; 
         }
         .navbar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 90%;
+            max-width: 95%;
             margin: 0 auto;
         }
         .site-title {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #3498db;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #1a73e8;
             text-decoration: none;
         }
         .navbar-links a {
-            color: white;
+            color: #555;
             text-decoration: none;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 4px;
             margin-left: 10px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
+            font-weight: 500;
         }
         .navbar-links a:hover {
-            background-color: #34495e;
+            background-color: #e6e6e6;
+            color: #1a73e8;
+        }
+        /* Style actif pour la page actuelle */
+        #nav-consulter {
+            background-color: #1a73e8;
+            color: white !important;
         }
 
-        /* CSS DU CONTENU PRINCIPAL */
+        /* ======================================= */
+        /* CONTENEUR ET TITRE */
+        /* ======================================= */
         .container {
-            width: 90%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px 25px;
+            width: 95%;
+            max-width: 1300px;
+            background: #ffffff;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
         }
         h1 {
-            color: #3498db;
-            margin-bottom: 20px;
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 700;
         }
-        .info-box {
-            background-color: #f7f9fc;
-            border: 1px solid #cceeff;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
         }
-        #btn-access {
-            display: inline-block;
-            background-color: #27ae60;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
-            text-decoration: none;
+
+        /* ======================================= */
+        /* STYLE DU TABLEAU */
+        /* ======================================= */
+        .table-responsive {
+            overflow-x: auto; /* Permet le défilement horizontal sur mobile */
+        }
+
+        #incidentTable {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
-            transition: background-color 0.3s;
-            font-weight: bold;
+            font-size: 0.9em;
         }
-        #btn-access:hover {
-            background-color: #2ecc71;
+
+        #incidentTable thead th {
+            background-color: #2c3e50; /* Bleu foncé pour l'en-tête */
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap; /* Empêche les en-têtes de se couper */
+        }
+
+        #incidentTable tbody td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: top;
+        }
+
+        #incidentTable tbody tr:nth-child(even) {
+            background-color: #f7f7f7; /* Lignes alternées pour la lisibilité */
+        }
+        
+        #incidentTable tbody tr:hover {
+            background-color: #e3f2fd; /* Surligner au passage de la souris */
+        }
+
+        /* Style spécifique aux colonnes importantes */
+        .col-matricule {
+            font-weight: bold;
+            color: #e67e22; /* Orange pour attirer l'attention sur l'identité */
+        }
+        .col-type {
+            font-weight: 600;
+            color: #c0392b; /* Rouge pour le type d'incident */
+        }
+
+        #chargement-message {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #777;
         }
     </style>
 </head>
 <body>
-// VÉRIFICATION DE SÉCURITÉ POUR L'ACCÈS AU TABLEAU DE BORD
-if (!sessionStorage.getItem('dg_access')) {
-    alert("Accès non autorisé. Seul l'Administrateur DG010 peut consulter les données.");
-    window.location.href = "connexion_employe.html";
-}
-<script>
-    // Si la clé d'accès n'existe pas, on redirige pour forcer le login.
-    if (sessionStorage.getItem('dg_access') !== 'granted') {
-        alert("Accès non autorisé. Veuillez vous connecter via la page d'accueil.");
-        window.location.href = "index.html";
-    }
-    
-    // URL DE CONSULTATION FINALE DE LA FEUILLE GOOGLE SHEETS
-    const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1wFuri-HF2h_c4pYIhiF4zHUq-xR7qea_FMfyiEqAHpA/edit?pli=1&gid=1846802873#gid=1846802873"; 
-
-    window.onload = function() {
-        const linkElement = document.getElementById('btn-access');
-        linkElement.href = GOOGLE_SHEET_URL;
-    }
-</script>
 
 <div class="navbar">
     <div class="navbar-content">
         <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
-            <a href="index.html">Accueil</a>
-            <a href="signaler.html">Nouveau Signalement</a>
-            <a href="consulter.html">Tableau de Bord</a>
-        </div>
-    </div>
-</div>
-
-<div class="container">
-    <h1>✅ Accès Sécurisé au Tableau de Bord DG</h1>
-
-    <div class="info-box">
-        <p>En raison de la nature confidentielle et dynamique des données, le tableau de bord des anomalies est hébergé sur notre serveur sécurisé.</p>
-        <p>**Cliquez sur le bouton ci-dessous pour accéder directement à la feuille de calcul centralisée des signalements.**</p>
-    </div>
-
-    <a href="#" id="btn-access" target="_blank">
-        Voir les Anomalies en Temps Réel
-    </a>
-
-    <p style="margin-top: 20px; color: #555;">(Ceci ouvrira un nouvel onglet.)</p>
-</div>
-
-</body>
-</html>
-
+            <a href="connexion_employe.html">Nouveau Signalement</a>
+            <a href="consulter.html" id="
