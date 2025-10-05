@@ -64,7 +64,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         h1 {
-            color: #f39c12; /* Couleur d'alerte */
+            color: #f39c12; 
             text-align: center;
             margin-bottom: 20px;
         }
@@ -82,6 +82,7 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 1em;
+            margin-bottom: 5px; /* Espace */
         }
         textarea {
             resize: vertical;
@@ -123,14 +124,22 @@
     
     <form id="incidentForm">
         
+        <h2>Votre Identification</h2>
+        <label for="nom_prenom">Nom et Prénom :</label>
+        <input type="text" id="nom_prenom" name="nom_prenom" placeholder="Votre Nom et Prénom" required>
+
+        <label for="poste">Poste / Fonction :</label>
+        <input type="text" id="poste" name="poste" placeholder="Ex: Chef d'Équipe Logistique" required>
+
+        <h2>Détails de l'Anomalie</h2>
         <label for="type_incident">Type d'Anomalie :</label>
         <select id="type_incident" name="type_incident" required>
             <option value="">-- Sélectionnez un type --</option>
-            <option value="fraude">Fraude / Irrégularité Financière</option>
-            <option value="securite">Problème de Sécurité (équipement, bâtiment)</option>
-            <option value="management">Conflit de Management / Harcèlement</option>
-            <option value="qualite">Problème de Qualité ou de Processus</option>
-            <option value="autre">Autre</option>
+            <option value="Fraude">Fraude / Irrégularité Financière</option>
+            <option value="Sécurité">Problème de Sécurité (équipement, bâtiment)</option>
+            <option value="Management">Conflit de Management / Harcèlement</option>
+            <option value="Qualité">Problème de Qualité ou de Processus</option>
+            <option value="Autre">Autre</option>
         </select>
         
         <label for="localisation">Département/Site :</label>
@@ -149,7 +158,7 @@
         <input type="datetime-local" id="date_heure" name="date_heure" required>
 
         <label for="description">Description Détaillée :</label>
-        <textarea id="description" name="description" placeholder="Décrivez clairement les faits, le lieu, et les personnes impliquées SANS spéculer." required></textarea>
+        <textarea id="description" name="description" placeholder="Décrivez clairement les faits, le lieu, et les personnes impliquées." required></textarea>
         
         <button type="submit" id="btn-soumettre">Transmettre à la DG</button>
     </form>
@@ -159,11 +168,33 @@
     document.getElementById('incidentForm').addEventListener('submit', function(event) {
         event.preventDefault(); 
         
-        // Simulation de l'envoi
-        alert("Signalement transmis ! La Direction Générale a été notifiée.");
+        // 1. Récupérer les données du formulaire
+        const now = new Date();
+        const incident = {
+            id: now.getTime(), // ID unique basé sur le temps
+            nom_prenom: document.getElementById('nom_prenom').value,
+            poste: document.getElementById('poste').value,
+            type: document.getElementById('type_incident').value,
+            localisation: document.getElementById('localisation').value,
+            date_heure: document.getElementById('date_heure').value,
+            description: document.getElementById('description').value,
+            date_signalement: now.toISOString(), // Date d'enregistrement pour l'expiration
+        };
 
-        // Redirection vers l'accueil
-        window.location.href = "index.html"; 
+        // 2. Récupérer les signalements existants
+        let anomalies = JSON.parse(localStorage.getItem('anomalies')) || [];
+
+        // 3. Ajouter la nouvelle anomalie
+        anomalies.push(incident);
+
+        // 4. Enregistrer la liste mise à jour
+        localStorage.setItem('anomalies', JSON.stringify(anomalies));
+        
+        // Vider le formulaire pour un nouveau signalement
+        document.getElementById('incidentForm').reset();
+
+        // Afficher la confirmation
+        alert("Signalement transmis ! La Direction Générale a été notifiée et l'anomalie est enregistrée.");
     });
 </script>
 
