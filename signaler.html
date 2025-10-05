@@ -111,6 +111,14 @@
         #btn-soumettre:hover {
             background-color: #2ecc71;
         }
+        /* Style spécifique pour les champs de sélection */
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row > div {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -139,6 +147,32 @@
         <label for="poste">Poste / Fonction :</label>
         <input type="text" id="poste" name="poste" placeholder="Ex: Chef d'Équipe Logistique" required>
 
+        <h2>Localisation de l'Anomalie</h2>
+        <div class="form-row">
+            <div>
+                <label for="lieu">Lieu :</label>
+                <select id="lieu" name="lieu" required>
+                    <option value="">-- Sélectionner Lieu --</option>
+                    <option value="Base">Base</option>
+                    <option value="Direction">Direction</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+            <div>
+                <label for="localisation">Département/Service :</label>
+                <select id="localisation" name="localisation" required>
+                    <option value="">-- Sélectionner Dpt/Svc --</option>
+                    <option value="Service Facturation">Service Facturation</option>
+                    <option value="Service Électrique">Service Électrique</option>
+                    <option value="QHSE">QHSE</option>
+                    <option value="Service CND">Service CND</option>
+                    <option value="Logistique">Logistique</option>
+                    <option value="Comptabilité">Comptabilité</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+        </div>
+
         <h2>Détails de l'Anomalie</h2>
         <label for="type_incident">Type d'Anomalie :</label>
         <select id="type_incident" name="type_incident" required>
@@ -150,18 +184,6 @@
             <option value="Autre">Autre</option>
         </select>
         
-        <label for="localisation">Département/Site :</label>
-        <input type="text" id="localisation" name="localisation" 
-               placeholder="Ex: Comptabilité, Dépôt de Brazzaville" required list="suggestions">
-        
-        <datalist id="suggestions">
-            <option value="Direction Commerciale">
-            <option value="Ressources Humaines (RH)">
-            <option value="Service Informatique (IT)">
-            <option value="Site de Pointe-Noire">
-            <option value="Siège Social (Brazzaville)">
-        </datalist>
-
         <label for="date_heure">Date et Heure Estimée de l'Anomalie :</label>
         <input type="datetime-local" id="date_heure" name="date_heure" required>
 
@@ -174,6 +196,7 @@
 
 <script>
     // ⚠️ URL DE VOTRE APPLICATION WEB GOOGLE APPS SCRIPT
+    // Cette URL est correcte pour l'ENVOI de données
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6lsHAOLM4NKCal2j4IfgxOpGMG4w4ny57EDJP9X_fM2tUXdcdj0h54Rw6rg_oDW7wgQ/exec"; 
 
     document.getElementById('incidentForm').addEventListener('submit', function(event) {
@@ -193,7 +216,6 @@
             if (response.ok) {
                 // Succès : Réinitialiser le formulaire et alerter
                 form.reset();
-                // Redirection vers l'accueil après l'alerte
                 alert("Signalement transmis avec succès ! La Direction Générale a été notifiée et l'anomalie est enregistrée dans la base de données.");
                 window.location.href = "index.html"; 
             } else {
