@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alerte Citoyenne - Signaler</title>
+    <title>Signalement Pro - Signaler</title>
     <style>
         /* CSS GÉNÉRAL */
         body {
@@ -23,7 +23,7 @@
         /* CSS DE LA BARRE DE NAVIGATION (identique) */
         .navbar {
             width: 100%;
-            background-color: #333;
+            background-color: #2c3e50;
             color: white;
             padding: 15px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
@@ -51,7 +51,7 @@
             transition: background-color 0.3s;
         }
         .navbar-links a:hover {
-            background-color: #555;
+            background-color: #34495e;
         }
         
         /* CSS DU FORMULAIRE */
@@ -64,7 +64,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         h1 {
-            color: #e74c3c;
+            color: #f39c12; /* Couleur d'alerte */
             text-align: center;
             margin-bottom: 20px;
         }
@@ -108,49 +108,50 @@
 
 <div class="navbar">
     <div class="navbar-content">
-        <a href="index.html" class="site-title">Alerte Citoyenne</a>
+        <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
             <a href="index.html">Accueil</a>
-            <a href="signaler.html">Signaler</a>
-            <a href="consulter.html">Alertes</a>
+            <a href="signaler.html">Nouveau Signalement</a>
+            <a href="consulter.html">Tableau de Bord</a>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <h1>🚨 Signaler un Incident</h1>
-    <p>Signalez un événement pour alerter la communauté. Votre signalement reste **anonyme**.</p>
+    <h1>🔔 Signaler une Anomalie Interne</h1>
+    <p>Ce signalement est transmis directement à la Direction Générale (DG).</p>
     
     <form id="incidentForm">
         
-        <label for="type_incident">Type d'Incident :</label>
+        <label for="type_incident">Type d'Anomalie :</label>
         <select id="type_incident" name="type_incident" required>
             <option value="">-- Sélectionnez un type --</option>
-            <option value="vol">Vol ou Agression</option>
-            <option value="accident">Accident de la route</option>
-            <option value="danger_public">Danger Public (feu, inondation, route barrée)</option>
+            <option value="fraude">Fraude / Irrégularité Financière</option>
+            <option value="securite">Problème de Sécurité (équipement, bâtiment)</option>
+            <option value="management">Conflit de Management / Harcèlement</option>
+            <option value="qualite">Problème de Qualité ou de Processus</option>
             <option value="autre">Autre</option>
         </select>
         
-        <label for="localisation">Localisation (Rue ou Quartier) :</label>
+        <label for="localisation">Département/Site :</label>
         <input type="text" id="localisation" name="localisation" 
-               placeholder="Ex: Marché Total, Rue 12" required list="suggestions">
+               placeholder="Ex: Comptabilité, Dépôt de Brazzaville" required list="suggestions">
         
         <datalist id="suggestions">
-            <option value="Marché Total">
-            <option value="Avenue de l'Indépendance">
-            <option value="Rond-point de la Patte d'Oie">
-            <option value="Aéroport Maya-Maya">
-            <option value="Plage de Pointe-Noire">
+            <option value="Direction Commerciale">
+            <option value="Ressources Humaines (RH)">
+            <option value="Service Informatique (IT)">
+            <option value="Site de Pointe-Noire">
+            <option value="Siège Social (Brazzaville)">
         </datalist>
 
-        <label for="date_heure">Date et Heure Estimée :</label>
+        <label for="date_heure">Date et Heure Estimée de l'Anomalie :</label>
         <input type="datetime-local" id="date_heure" name="date_heure" required>
 
-        <label for="description">Description de l'événement :</label>
-        <textarea id="description" name="description" placeholder="Décrivez brièvement ce qui s'est passé, SANS nommer de personnes." required></textarea>
+        <label for="description">Description Détaillée :</label>
+        <textarea id="description" name="description" placeholder="Décrivez clairement les faits, le lieu, et les personnes impliquées SANS spéculer." required></textarea>
         
-        <button type="submit" id="btn-soumettre">Envoyer l'Alerte</button>
+        <button type="submit" id="btn-soumettre">Transmettre à la DG</button>
     </form>
 </div>
 
@@ -159,7 +160,7 @@
         event.preventDefault(); 
         
         // Simulation de l'envoi
-        alert("Alerte envoyée avec succès ! Merci de votre contribution anonyme.");
+        alert("Signalement transmis ! La Direction Générale a été notifiée.");
 
         // Redirection vers l'accueil
         window.location.href = "index.html"; 
