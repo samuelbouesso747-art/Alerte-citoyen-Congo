@@ -68,6 +68,14 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
         label {
             display: block;
             margin-top: 15px;
@@ -82,7 +90,7 @@
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 1em;
-            margin-bottom: 5px; /* Espace */
+            margin-bottom: 5px;
         }
         textarea {
             resize: vertical;
@@ -165,36 +173,38 @@
 </div>
 
 <script>
+    // ⚠️ URL DE VOTRE APPLICATION WEB GOOGLE APPS SCRIPT
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6lsHAOLM4NKCal2j4IfgxOpGMG4w4ny57EDJP9X_fM2tUXdcdj0h54Rw6rg_oDW7wgQ/exec"; 
+
     document.getElementById('incidentForm').addEventListener('submit', function(event) {
         event.preventDefault(); 
         
-        // 1. Récupérer les données du formulaire
-        const now = new Date();
-        const incident = {
-            id: now.getTime(), // ID unique basé sur le temps
-            nom_prenom: document.getElementById('nom_prenom').value,
-            poste: document.getElementById('poste').value,
-            type: document.getElementById('type_incident').value,
-            localisation: document.getElementById('localisation').value,
-            date_heure: document.getElementById('date_heure').value,
-            description: document.getElementById('description').value,
-            date_signalement: now.toISOString(), // Date d'enregistrement pour l'expiration
-        };
-
-        // 2. Récupérer les signalements existants
-        let anomalies = JSON.parse(localStorage.getItem('anomalies')) || [];
-
-        // 3. Ajouter la nouvelle anomalie
-        anomalies.push(incident);
-
-        // 4. Enregistrer la liste mise à jour
-        localStorage.setItem('anomalies', JSON.stringify(anomalies));
+        const form = event.target;
         
-        // Vider le formulaire pour un nouveau signalement
-        document.getElementById('incidentForm').reset();
+        // Créer un objet FormData à partir du formulaire
+        const formData = new FormData(form);
 
-        // Afficher la confirmation
-        alert("Signalement transmis ! La Direction Générale a été notifiée et l'anomalie est enregistrée.");
+        // Envoyer les données au script Google
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                // Succès : Réinitialiser le formulaire et alerter
+                form.reset();
+                // Redirection vers l'accueil après l'alerte
+                alert("Signalement transmis avec succès ! La Direction Générale a été notifiée et l'anomalie est enregistrée dans la base de données.");
+                window.location.href = "index.html"; 
+            } else {
+                // Échec de l'envoi
+                alert("Erreur lors de la transmission du signalement. Veuillez réessayer.");
+            }
+        })
+        .catch(error => {
+            console.error('Erreur réseau:', error);
+            alert("Erreur de connexion : le signalement n'a pas pu être envoyé. Vérifiez votre connexion.");
+        });
     });
 </script>
 
