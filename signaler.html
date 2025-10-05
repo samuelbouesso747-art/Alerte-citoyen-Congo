@@ -3,7 +3,32 @@
         <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
             <a href="connexion_employe.html">Nouveau Signalement</a>
-            <a href="consulter.html" style="opacity: 0.5; pointer-events: none;">Tableau de Bord (Accès DG)</a>
+            <a href="consulter.html" id="nav-consulter">Tableau de Bord (DG)</a>
         </div>
     </div>
 </div>
+
+<div class="container">
+    </div>
+
+<script>
+    // ... (Le reste du script de signaler.html)
+
+    // NOUVELLE VÉRIFICATION : Rendre le lien DG accessible si l'utilisateur est le DG010
+    window.onload = function() {
+        const navConsulter = document.getElementById('nav-consulter');
+        const matricule = sessionStorage.getItem('employee_matricule');
+
+        if (matricule === 'DG010') {
+            // Si c'est le DG010, rendre le lien normal
+            navConsulter.style.opacity = '1';
+            navConsulter.style.pointerEvents = 'auto';
+        } else {
+            // Pour tous les autres, le lien reste désactivé (l'accès est bloqué par la page consulter.html elle-même)
+            navConsulter.style.opacity = '0.5';
+            navConsulter.style.pointerEvents = 'none';
+        }
+    };
+    
+    // ... (Le reste de votre script d'envoi de formulaire)
+</script>
