@@ -17,8 +17,6 @@
             align-items: center;
             min-height: 100vh;
             background-color: #ecf0f1; 
-            
-            /* -- NOUVEL ARRIÈRE-PLAN -- */
             background-image: url('casque_securite_jaune.jpg'); 
             background-size: cover;
             background-position: center;
@@ -86,7 +84,7 @@
             width: 90%;
             max-width: 900px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.95); /* Légèrement transparent pour laisser voir le casque */
+            background: rgba(255, 255, 255, 0.95); 
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -160,7 +158,6 @@
         /* RESPONSIVE DESIGN (Compatibilité Mobile) */
         /* ======================================= */
         
-        /* Pour les tablettes et les mobiles (moins de 768px) */
         @media (max-width: 768px) {
             .navbar-content {
                 flex-direction: column;
@@ -183,14 +180,12 @@
             h2 {
                 font-size: 1.8em;
             }
-            /* Empilement des cartes pour les petits écrans */
             .action-cards {
                 flex-direction: column;
                 gap: 20px;
             }
         }
         
-        /* Pour les très petits écrans (mobiles) */
         @media (max-width: 480px) {
             .button {
                 padding: 10px;
@@ -206,7 +201,7 @@
         <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
             <a href="index.html">Accueil</a>
-            <a href="signaler.html">Nouveau Signalement</a>
+            <a href="connexion_employe.html">Nouveau Signalement</a> 
             <a href="consulter.html">Tableau de Bord</a>
         </div>
     </div>
@@ -223,10 +218,10 @@
             <div>
                 <div class="card-title">🚨 Signaler un Incident</div>
                 <div class="card-description">
-                    Utilisateurs : Saisissez une nouvelle anomalie, une irrégularité ou un risque pour l'entreprise.
+                    Employés : Connectez-vous pour saisir une nouvelle anomalie, une irrégularité ou un risque pour l'entreprise.
                 </div>
             </div>
-            <a href="signaler.html" id="btn-signaler" class="button">
+            <a href="connexion_employe.html" id="btn-signaler" class="button">
                 Accéder au Formulaire
             </a>
         </div>
@@ -235,7 +230,7 @@
             <div>
                 <div class="card-title">📊 Accès Direction Générale</div>
                 <div class="card-description">
-                    Accès réservé : Consultez l'ensemble des signalements actifs et l'état de la base de données.
+                    Accès ultra-réservé : Consultez l'ensemble des signalements actifs et l'état de la base de données.
                 </div>
             </div>
             <a href="#" id="btn-login" class="button">
@@ -250,21 +245,30 @@
     document.getElementById('btn-login').addEventListener('click', function(event) {
         event.preventDefault(); // Empêche le lien de naviguer par défaut
 
-        // MOT DE PASSE SECRET : Heydna17
+        // 1. Demander le mot de passe
         const motDePasseSecret = "Heydna17"; 
+        const motDePasseEntre = prompt("ACCÈS DG | Étape 1/2 : Veuillez entrer le mot de passe :");
 
-        // Demander le mot de passe à l'utilisateur
-        const motDePasseEntre = prompt("Veuillez entrer le mot de passe d'accès au Tableau de Bord :");
+        if (motDePasseEntre !== motDePasseSecret) {
+            if (motDePasseEntre !== null) {
+                alert("Accès refusé. Mot de passe incorrect.");
+            }
+            return; 
+        }
 
-        // Vérification
-        if (motDePasseEntre === motDePasseSecret) {
-            // Créer une variable de session simple pour indiquer l'accès
+        // 2. Si le mot de passe est correct, demander le matricule spécifique
+        const matriculeDG = "DG01"; 
+        const matriculeEntre = prompt("ACCÈS DG | Étape 2/2 : Veuillez entrer votre matricule (DG01 requis) :");
+
+        if (matriculeEntre && matriculeEntre.toUpperCase() === matriculeDG) {
+            // Créer une variable de session pour indiquer l'accès DG
             sessionStorage.setItem('dg_access', 'granted');
-            // Si le mot de passe est correct, naviguer vers la page de consultation
+            alert("Accès DG accordé.");
+            
+            // Rediriger vers la page de consultation
             window.location.href = "consulter.html";
-        } else if (motDePasseEntre !== null) {
-            // Si l'utilisateur a entré quelque chose, mais c'est faux
-            alert("Accès refusé. Mot de passe incorrect.");
+        } else {
+            alert("Accès DG refusé. Seul le matricule DG01 est autorisé à accéder au Tableau de Bord.");
         }
     });
 </script>
