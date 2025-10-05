@@ -25,7 +25,7 @@
         }
 
         /* ======================================= */
-        /* NAVIGATION (Identique) */
+        /* NAVIGATION */
         /* ======================================= */
         .navbar {
             width: 100%;
@@ -33,7 +33,7 @@
             color: white;
             padding: 15px 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            position: fixed; /* Fixer la barre en haut */
+            position: fixed; 
             top: 0;
             z-index: 1000;
         }
@@ -73,7 +73,7 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            margin-top: 100px; /* Espace pour la barre de navigation fixe */
+            margin-top: 100px;
         }
         h2 {
             color: #2c3e50;
@@ -116,6 +116,22 @@
             margin-top: 10px;
             text-align: center;
         }
+        /* Style pour l'accès administrateur */
+        #admin-link-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #admin-link {
+            color: #2c3e50;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+            border-bottom: 1px dotted #2c3e50;
+        }
+        #admin-link:hover {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
     </style>
 </head>
 <body>
@@ -124,10 +140,8 @@
     <div class="navbar-content">
         <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
-            <a href="index.html">Accueil</a>
             <a href="connexion_employe.html">Nouveau Signalement</a>
-            <a href="consulter.html">Tableau de Bord</a>
-        </div>
+            </div>
     </div>
 </div>
 
@@ -159,24 +173,33 @@
     </form>
 </div>
 
+<div id="admin-link-container">
+    <a href="#" id="admin-link">Accès Administrateur (DG)</a>
+</div>
+
 <script>
+    // Configuration Administrateur
+    const DG_PASSWORD = "Heydna17";
+    const DG_MATRICULE = "DG010"; // Nouveau matricule requis
+
+    // ----------------------------------------------------
+    // LOGIQUE DE CONNEXION EMPLOYÉ (NON DG)
+    // ----------------------------------------------------
     document.getElementById('employeeLoginForm').addEventListener('submit', function(event) {
         event.preventDefault(); 
 
         const nomPrenom = document.getElementById('nom_prenom').value.trim();
         const matricule = document.getElementById('matricule').value.trim().toUpperCase();
 
-        // Regex de validation du matricule : DG, CE, TE, ST + 0 + chiffre/nombre
-        const matriculeRegex = /^(DG|CE|TE|ST)0\d+$/;
+        // Regex de validation standard pour les employés
+        const standardMatriculeRegex = /^(DG|CE|TE|ST)0\d+$/;
 
-        if (!matriculeRegex.test(matricule)) {
-            alert("Erreur de format de Matricule. Le matricule doit commencer par DG, CE, TE, ou ST, suivi d'un 0 et d'un chiffre (ex: CE01).");
+        if (!standardMatriculeRegex.test(matricule)) {
+            alert("Erreur de format de Matricule. Le matricule doit être valide (ex: CE01, DG012).");
             return;
         }
 
         // Si la validation passe, simuler la connexion et enregistrer les données
-        
-        // Stockage des informations d'identification dans la session pour pré-remplissage ou traçabilité
         sessionStorage.setItem('employee_access', 'granted');
         sessionStorage.setItem('employee_name', nomPrenom);
         sessionStorage.setItem('employee_matricule', matricule);
@@ -186,6 +209,36 @@
 
         alert(`Connexion réussie, ${nomPrenom}. Accès au formulaire de signalement.`);
         window.location.href = "signaler.html";
+    });
+
+    // ----------------------------------------------------
+    // LOGIQUE DE CONNEXION DG (ADMINISTRATEUR)
+    // ----------------------------------------------------
+    document.getElementById('admin-link').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        // Étape 1 : Mot de passe
+        const motDePasseEntre = prompt("ACCÈS DG | Étape 1/2 : Veuillez entrer le mot de passe :");
+
+        if (motDePasseEntre !== DG_PASSWORD) {
+            if (motDePasseEntre !== null) {
+                alert("Accès refusé. Mot de passe incorrect.");
+            }
+            return;
+        }
+
+        // Étape 2 : Matricule spécifique
+        const matriculeEntre = prompt("ACCÈS DG | Étape 2/2 : Veuillez entrer votre matricule (DG010 requis) :");
+
+        if (matriculeEntre && matriculeEntre.toUpperCase() === DG_MATRICULE) {
+            sessionStorage.setItem('dg_access', 'granted');
+            alert(`Accès Administrateur accordé à ${DG_MATRICULE}.`);
+            
+            // Rediriger vers la page de consultation
+            window.location.href = "consulter.html";
+        } else {
+            alert(`Accès DG refusé. Seul le matricule ${DG_MATRICULE} est autorisé.`);
+        }
     });
 </script>
 
