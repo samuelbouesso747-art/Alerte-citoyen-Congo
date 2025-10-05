@@ -54,21 +54,10 @@
             background-color: #34495e;
         }
 
-        /* CSS DE LA CARTE STATIQUE */
-        #map-static {
-            height: 300px; 
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            object-fit: cover; 
-            background-color: #3498db; 
-            border: 1px solid #2980b9;
-        }
-        
         /* CSS DU CONTENU PRINCIPAL */
         .container {
             width: 90%;
-            max-width: 600px;
+            max-width: 700px; /* Un peu plus large pour l'affichage */
             background: rgba(255, 255, 255, 0.95);
             padding: 25px;
             border-radius: 12px;
@@ -78,6 +67,9 @@
             color: #3498db;
             text-align: center;
             margin-bottom: 20px;
+        }
+        #anomalies-list {
+            margin-top: 20px;
         }
         .alert-item {
             border: 1px solid #ddd;
@@ -90,35 +82,117 @@
         .alert-item.critical {
             border-left: 5px solid #e74c3c; /* Rouge critique */
         }
+        .alert-item.warning {
+            border-left: 5px solid #f39c12; /* Jaune/Orange */
+        }
         .alert-header {
             display: flex;
             justify-content: space-between;
             font-weight: bold;
             margin-bottom: 5px;
         }
-        .alert-type {
-            font-size: 1.1em;
-        }
-        .alert-location {
-            color: #555;
+        .alert-info {
             font-size: 0.9em;
+            color: #555;
+            border-top: 1px dashed #eee;
+            margin-top: 10px;
+            padding-top: 5px;
         }
         .alert-description {
             margin-top: 10px;
             font-style: italic;
             color: #444;
         }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
 <script>
-    // Si la clé d'accès (qui est définie à l'accueil après la saisie du mot de passe)
-    // n'existe pas, on redirige pour forcer le login.
+    // Si la clé d'accès n'existe pas, on redirige pour forcer le login.
     if (sessionStorage.getItem('dg_access') !== 'granted') {
         alert("Accès non autorisé. Veuillez vous connecter via la page d'accueil.");
         window.location.href = "index.html";
     }
+
+    /**
+     * Fonction pour supprimer les signalements de plus de 7 jours
+     */
+    function cleanupAnomalies() {
+        let anomalies = JSON.parse(localStorage.getItem('anomalies')) || [];
+        const MILLISECONDS_IN_WEEK = 7 * 24 * 60 * 60 * 1000;
+        const cutoffTime = new Date().getTime() - MILLISECONDS_IN_WEEK;
+
+        // Filtre : conserve uniquement les anomalies signalées APRÈS le temps limite
+        const activeAnomalies = anomalies.filter(a => {
+            const signalementTime = new Date(a.date_signalement).getTime();
+            return signalementTime > cutoffTime;
+        });
+
+        // Met à jour le localStorage avec la liste nettoyée
+        localStorage.setItem('anomalies', JSON.stringify(activeAnomalies));
+        return activeAnomalies;
+    }
+
+    /**
+     * Fonction pour afficher les signalements
+     */
+    function displayAnomalies() {
+        // 1. Nettoyage et récupération des anomalies actives
+        const anomalies = cleanupAnomalies();
+        const listContainer = document.getElementById('anomalies-list');
+        listContainer.innerHTML = ''; // Vider l'ancienne liste
+
+        if (anomalies.length === 0) {
+            listContainer.innerHTML = '<div class="empty-state">Aucune anomalie active n\'a été signalée au cours des 7 derniers jours.</div>';
+            return;
+        }
+
+        // 2. Parcourir et afficher chaque anomalie
+        anomalies.forEach(anomaly => {
+            let criticalityClass = 'warning';
+            if (anomaly.type === 'Fraude' || anomaly.type === 'Sécurité') {
+                criticalityClass = 'critical';
+            } else if (anomaly.type === 'Qualité') {
+                criticalityClass = 'warning';
+            } else {
+                criticalityClass = ''; // Par défaut bleu
+            }
+            
+            // Formatage de la date de signalement pour affichage
+            const dateSignalement = new Date(anomaly.date_signalement).toLocaleDateString('fr-FR', {
+                day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+            });
+
+
+            const itemHTML = `
+                <div class="alert-item ${criticalityClass}">
+                    <div class="alert-header">
+                        <span class="alert-type">${anomaly.type}</span>
+                        <span>Signalé le ${dateSignalement}</span>
+                    </div>
+                    <div class="alert-description">
+                        ${anomaly.description}
+                    </div>
+                    <div class="alert-info">
+                        **Localisation** : ${anomaly.localisation} | **Date de l'événement** : ${new Date(anomaly.date_heure).toLocaleString('fr-FR')} 
+                        <br>
+                        **Signalé par** : ${anomaly.nom_prenom} (${anomaly.poste})
+                    </div>
+                </div>
+            `;
+            listContainer.innerHTML += itemHTML;
+        });
+    }
+
+    // Appeler l'affichage au chargement de la page
+    window.onload = displayAnomalies;
 </script>
 
 <div class="navbar">
@@ -133,37 +207,12 @@
 </div>
 
 <div class="container">
-    <h1>📊 Tableau de Bord des Anomalies</h1>
+    <h1>📊 Tableau de Bord des Anomalies Actives</h1>
+    <p>Ce tableau affiche uniquement les anomalies signalées au cours des **7 derniers jours**.</p>
 
-    <img src="https://via.placeholder.com/600x300/3498db/FFFFFF?text=CARTE+SIMULÉE+DES+SITES+DE+L'ENTREPRISE" 
-         alt="Carte simulée des sites" 
-         id="map-static">
+    <div id="anomalies-list">
+        </div>
 
-    <p>Alertes récentes nécessitant l'attention de la DG :</p>
-    
-    <div class="alert-item critical">
-        <div class="alert-header">
-            <span class="alert-type">Fraude / Irrégularité (Signalé il y a 1h)</span>
-        </div>
-        <div class="alert-location">Localisation : Département Comptabilité (Siège Social)</div>
-        <div class="alert-description">Description : Paiement suspect de fournisseur non habituel, sans validation complète. Demande d'audit immédiat.</div>
-    </div>
-    
-    <div class="alert-item critical">
-        <div class="alert-header">
-            <span class="alert-type">Problème de Sécurité (Signalé il y a 3h)</span>
-        </div>
-        <div class="alert-location">Localisation : Dépôt Logistique de Pointe-Noire</div>
-        <div class="alert-description">Description : Palettes stockées devant la sortie de secours. Risque d'incendie et d'entrave à l'évacuation.</div>
-    </div>
-
-    <div class="alert-item">
-        <div class="alert-header">
-            <span class="alert-type">Problème de Qualité (Signalé il y a 8h)</span>
-        </div>
-        <div class="alert-location">Localisation : Ligne de Production A</div>
-        <div class="alert-description">Description : Processus de contrôle qualité contourné par l'équipe de nuit pour respecter les quotas.</div>
-    </div>
 </div>
 
 </body>
