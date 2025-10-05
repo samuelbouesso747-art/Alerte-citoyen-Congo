@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alerte Citoyenne - Accueil</title>
+    <title>Signalement Pro - Accueil</title>
     <style>
         /* CSS GÉNÉRAL */
         body {
@@ -14,7 +14,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background-image: url('fond_securite.jpg');
+            background-image: url('fond_securite.jpg'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -23,11 +23,11 @@
         /* CSS DE LA BARRE DE NAVIGATION */
         .navbar {
             width: 100%;
-            background-color: #333; /* Fond sombre */
+            background-color: #2c3e50;
             color: white;
             padding: 15px 0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-            margin-bottom: 50px; /* Espace sous la barre */
+            margin-bottom: 50px;
         }
         .navbar-content {
             display: flex;
@@ -39,7 +39,7 @@
         .site-title {
             font-size: 1.5em;
             font-weight: bold;
-            color: #3498db; /* Bleu */
+            color: #3498db;
             text-decoration: none;
         }
         .navbar-links a {
@@ -51,7 +51,7 @@
             transition: background-color 0.3s;
         }
         .navbar-links a:hover {
-            background-color: #555;
+            background-color: #34495e;
         }
         
         /* CSS DU CONTENU PRINCIPAL */
@@ -65,13 +65,18 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         h2 {
-            color: #333;
+            color: #2c3e50;
             margin-bottom: 30px;
             font-size: 2em;
         }
+        .tagline {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
         .button {
             display: block;
-            width: 80%; /* Plus petit pour centrer */
+            width: 80%;
             margin: 15px auto;
             padding: 15px;
             border: none;
@@ -82,37 +87,61 @@
             color: white;
             text-decoration: none;
         }
-        #btn-signaler { background-color: #e74c3c; }
-        #btn-signaler:hover { background-color: #c0392b; }
-        #btn-consulter { background-color: #3498db; }
-        #btn-consulter:hover { background-color: #2980b9; }
+        #btn-signaler { background-color: #f39c12; } 
+        #btn-signaler:hover { background-color: #e67e22; }
+        #btn-login { background-color: #3498db; }
+        #btn-login:hover { background-color: #2980b9; }
     </style>
 </head>
 <body>
 
 <div class="navbar">
     <div class="navbar-content">
-        <a href="index.html" class="site-title">Alerte Citoyenne</a>
+        <a href="index.html" class="site-title">Signalement Pro</a>
         <div class="navbar-links">
             <a href="index.html">Accueil</a>
-            <a href="signaler.html">Signaler</a>
-            <a href="consulter.html">Alertes</a>
+            <a href="signaler.html">Nouveau Signalement</a>
+            <a href="consulter.html">Tableau de Bord</a>
         </div>
     </div>
 </div>
 
 <div class="main-content">
-    <h2>Votre outil de prévention communautaire</h2>
-    <p>Utilisez les liens ci-dessous pour agir rapidement :</p>
+    <h2>Plateforme de Remontée d'Anomalies</h2>
+    <p class="tagline">Canal Direct vers la Direction Générale (DG)</p>
+    <p>Utilisez cet outil pour signaler de manière rapide et confidentielle tout dysfonctionnement, risque ou situation nécessitant l'attention de la Direction.</p>
 
     <a href="signaler.html" id="btn-signaler" class="button">
-        Signaler un Incident Anonyme
+        Signaler une Anomalie / un Risque
     </a>
 
-    <a href="consulter.html" id="btn-consulter" class="button">
-        Consulter les Alertes Récemment Signalées
+    <a href="#" id="btn-login" class="button">
+        Tableau de Bord des Incidents (Accès DG)
     </a>
 </div>
+
+<script>
+    document.getElementById('btn-login').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche le lien de naviguer par défaut
+
+        // MOT DE PASSE SECRET MIS À JOUR
+        const motDePasseSecret = "Heydna17"; 
+
+        // Demander le mot de passe à l'utilisateur
+        const motDePasseEntre = prompt("Veuillez entrer le mot de passe d'accès au Tableau de Bord :");
+
+        // Vérification
+        if (motDePasseEntre === motDePasseSecret) {
+            // Créer une variable de session simple pour indiquer l'accès
+            sessionStorage.setItem('dg_access', 'granted');
+            // Si le mot de passe est correct, naviguer vers la page de consultation
+            window.location.href = "consulter.html";
+        } else if (motDePasseEntre !== null) {
+            // Si l'utilisateur a entré quelque chose, mais c'est faux
+            alert("Accès refusé. Mot de passe incorrect.");
+        }
+    });
+</script>
 
 </body>
 </html>
