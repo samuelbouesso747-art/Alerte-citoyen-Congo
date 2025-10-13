@@ -221,4 +221,47 @@
         const nomPrenom = document.getElementById('nom_prenom').value.trim();
         // Le matricule est déjà en majuscule grâce à l'événement 'input'
         const matricule = matriculeInput.value.trim(); 
-        const password = document.getElementById
+        const password = document.getElementById('dg_password').value;
+
+        const standardMatriculeRegex = /^(DG|CE|TE|ST)0\d+$/;
+
+        if (!standardMatriculeRegex.test(matricule)) {
+            alert("Erreur de format de Matricule. Le matricule doit être valide (ex: CE01, DG012).");
+            return;
+        }
+
+        // --- 1. CAS ADMINISTRATEUR (DG010) ---
+        if (matricule === DG_MATRICULE) {
+            if (password === DG_PASSWORD) {
+                // Connexion DG réussie -> accès à l'interface de consultation
+                sessionStorage.setItem('dg_access', 'granted');
+                // Enregistrer les infos du DG pour la cohérence des sessions
+                sessionStorage.setItem('employee_name', nomPrenom);
+                sessionStorage.setItem('employee_matricule', matricule);
+                
+                alert(`Accès Administrateur accordé à ${matricule}.`);
+                window.location.href = "consulter.html";
+                return;
+            } else {
+                alert("Mot de passe Administrateur incorrect.");
+                return;
+            }
+        }
+        
+        // --- 2. CAS EMPLOYÉ STANDARD ---
+        
+        // Enregistrement des informations de l'employé dans la session
+        sessionStorage.setItem('employee_access', 'granted');
+        sessionStorage.setItem('employee_name', nomPrenom);
+        sessionStorage.setItem('employee_matricule', matricule);
+        sessionStorage.setItem('employee_sexe', document.getElementById('sexe').value);
+        sessionStorage.setItem('employee_dob', document.getElementById('date_naissance').value);
+
+        alert(`Connexion réussie, ${nomPrenom}. Accès au formulaire de signalement.`);
+        // Redirection vers le formulaire de signalement
+        window.location.href = "signaler.html"; 
+    });
+</script>
+
+</body>
+</html>
